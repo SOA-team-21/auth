@@ -31,7 +31,7 @@ func initDB() *gorm.DB {
 func startServer(handler *handler.AuthHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
-	router.HandleFunc("/auth/login", handler.Login).Methods("POST")
+	router.HandleFunc("/login", handler.Login).Methods("POST")
 
 	println("Server starting")
 	log.Fatal(http.ListenAndServe(":90", router)) //Port number must be different for different servers (because all run on localhost)

@@ -18,7 +18,7 @@ func GenerateAccessToken(user *model.User) (*AuthenticationResponse, error) {
 		"jti":      uuid.New().String(),
 		"id":       user.Id,
 		"username": user.Username,
-		"role":     user.Role,
+		"role":     user.Role.String(),
 		"exp":      time.Now().Add(24 * time.Hour).Unix(),
 	}
 

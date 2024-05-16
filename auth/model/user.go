@@ -63,3 +63,16 @@ func (user *User) HashPassword() error {
 func (user *User) VerifyPassword(password string) error {
 	return bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 }
+
+func (r Role) String() string {
+	switch r {
+	case 0:
+		return "administrator"
+	case 1:
+		return "author"
+	case 2:
+		return "tourist"
+	default:
+		return "unknown"
+	}
+}
