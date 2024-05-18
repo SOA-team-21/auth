@@ -29,3 +29,7 @@ func (service *UserService) Login(credentials AuthCredentials) (*tokengenerator.
 	fmt.Printf(fmt.Sprintf("Generated token: %s", authResponse.AccessToken))
 	return authResponse, nil
 }
+
+func (service *UserService) ValidateToken(tokenString string) error {
+	return tokengenerator.ValidateToken(tokenString)
+}
