@@ -1,6 +1,8 @@
 package tokengenerator
 
 import (
+	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -40,6 +42,28 @@ func CreateToken(claims jwt.MapClaims) (string, error) {
 		return "", err
 	}
 	return tokenString, nil
+}
+
+func ValidateToken(tokenString string) error {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		if token.Method.Alg() != jwt.SigningMethodHS256.Alg() {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Method.Alg())
+		}
+		return []byte(key), nil
+	})
+
+	if err != nil {
+		log.Fatalf("Error parsing token: %v", err)
+	}
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		log.Printf("Token is valid. Claims: %v\n", claims)
+		return nil
+	}
+	log.Printf("Token is invalid")
+	return err
 }
 
 func getEnv(key, defaultValue string) string {
