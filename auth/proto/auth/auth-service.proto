@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "auth/proto/auth";
+
+service AuthService{
+  rpc Login(AuthCredentials) returns(AuthenticationResponse){}
+
+}
+
+message AuthCredentials{
+  string Username = 1;
+  string Password  = 2;
+}
+message AuthenticationResponse{
+  int64 Id = 1;
+  string AccessToken  = 2;
+}
