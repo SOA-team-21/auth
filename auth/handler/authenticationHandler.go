@@ -2,6 +2,8 @@ package handler
 
 import (
 	"context"
+	"net/http"
+	"strings"
 
 	"auth.com/proto/auth"
 	"auth.com/service"
@@ -21,4 +23,21 @@ func (handler *AuthenticationHandler) Login(ctx context.Context, request *auth.A
 		return &auth.AuthenticationResponse{}, err
 	}
 	return &auth.AuthenticationResponse{Id: response.Id, AccessToken: response.AccessToken}, nil
+}
+
+func (handler *AuthenticationHandler) ValidateToken(ctx context.Context, request *auth.TokenRequest) (*auth.StatusCodeResponse, error) {
+	tokenString := request.Token
+	if tokenString == "" {
+		return &auth.StatusCodeResponse{StatusCode: http.StatusBadRequest}, nil
+	}
+	tokenString = strings.Split(tokenString, "Bearer")[1]
+	tokenString = strings.TrimSpace(tokenString)
+	if tokenString == "" {
+		return &auth.StatusCodeResponse{StatusCode: http.StatusBadRequest}, nil
+	}
+	err := handler.AuthService.ValidateToken(tokenString)
+	if err != nil {
+		return &auth.StatusCodeResponse{StatusCode: http.StatusExpectationFailed}, nil
+	}
+	return &auth.StatusCodeResponse{StatusCode: http.StatusOK}, nil
 }

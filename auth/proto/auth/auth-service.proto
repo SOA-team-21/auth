@@ -6,9 +6,15 @@ option go_package = "auth/proto/auth";
 
 service AuthService{
   rpc Login(AuthCredentials) returns(AuthenticationResponse){}
-
+  rpc ValidateToken(TokenRequest) returns(StatusCodeResponse){}
 }
 
+message TokenRequest{
+  string Token = 1;
+}
+message StatusCodeResponse{
+  int64 StatusCode = 1;
+}
 message AuthCredentials{
   string Username = 1;
   string Password  = 2;

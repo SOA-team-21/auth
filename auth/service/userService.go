@@ -21,10 +21,9 @@ func (service *UserService) Login(credentials AuthCredentials) (*tokengenerator.
 	if !user.IsActive || user.VerifyPassword(credentials.Password) != nil {
 		return nil, fmt.Errorf(fmt.Sprintf("credentials invalid or user is not active"))
 	}
-
 	authResponse, err = tokengenerator.GenerateAccessToken(&user)
 	if err != nil {
-		return nil, fmt.Errorf(fmt.Sprintf("credentials invalid or user is not active"))
+		return nil, fmt.Errorf(fmt.Sprintf("cannot generate token"))
 	}
 	fmt.Printf(fmt.Sprintf("Generated token: %s", authResponse.AccessToken))
 	return authResponse, nil
